@@ -3,12 +3,16 @@ import axios from 'axios';
 
 class App extends React.Component {
     constructor() {
-        super()
+        super();
 
         this.state = {
             pageNumber: 1,
             movies: []
-        }
+        };
+
+        this.compareByDesc.bind(this);
+        this.compareByAsc.bind(this);
+        this.sortBy.bind(this);
     }
 
     receiveData() {
@@ -44,17 +48,41 @@ class App extends React.Component {
         this.axiosCancelSource.cancel('Component unmounted.')
     }
 
+
+    compareByAsc(key) {
+        return function (a, b) {
+            if (a[key] < b[key]) return -1;
+            if (a[key] > b[key]) return 1;
+            return 0;
+        };
+    }
+    compareByDesc(key) {
+        return function (a, b) {
+            if (a[key] > b[key]) return -1;
+            if (a[key] < b[key]) return 1;
+            return 0;
+        };
+    }
+
+    sortBy(key) {
+        let arrayCopy = [...this.state.movies];
+        arrayCopy.sort(this.compareByAsc(key));
+        if(JSON.stringify(arrayCopy)===JSON.stringify(this.state.movies))
+            arrayCopy.sort(this.compareByDesc(key));
+        this.setState({movies: arrayCopy});
+    }
+
     render() {
         return(
             <div>
                 <table>
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Language</th>
-                        <th>Release date</th>
-                        <th>Popularity</th>
-                        <th>IMDB vote</th>
+                        <th onClick={() => this.sortBy('name')}>Name</th>
+                        <th onClick={() => this.sortBy('language')}>Language</th>
+                        <th onClick={() => this.sortBy('date')}>Release date</th>
+                        <th onClick={() => this.sortBy('popularity')}>Popularity</th>
+                        <th onClick={() => this.sortBy('vote')}>IMDB vote</th>
                     </tr>
                     </thead>
                     <tbody>
