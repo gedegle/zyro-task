@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import {IoIosArrowDown} from "react-icons/io";
 
 class App extends React.Component {
     constructor() {
@@ -74,25 +75,25 @@ class App extends React.Component {
 
     render() {
         return(
-            <div>
-                <table>
-                    <thead>
+            <div className={"table-container"}>
+                <table className={"content-table"}>
+                    <thead className={"content-table__header"}>
                     <tr>
-                        <th onClick={() => this.sortBy('name')}>Name</th>
-                        <th onClick={() => this.sortBy('language')}>Language</th>
-                        <th onClick={() => this.sortBy('date')}>Release date</th>
-                        <th onClick={() => this.sortBy('popularity')}>Popularity</th>
-                        <th onClick={() => this.sortBy('vote')}>IMDB vote</th>
+                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('name')}>Name <span className={"icon-arrow"}><IoIosArrowDown/></span></th>
+                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('language')}>Language</th>
+                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('date')}>Release date</th>
+                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('popularity')}>Popularity</th>
+                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('vote')}>IMDB vote</th>
                     </tr>
                     </thead>
                     <tbody>
                     {this.state.movies.length > 0 && this.state.movies.map((item, i) => (
-                        <tr key={i}>
-                            <td>{item.name}</td>
-                            <td>{item.language}</td>
-                            <td>{item.date}</td>
-                            <td>{item.popularity}</td>
-                            <td>{item.vote}</td>
+                        <tr key={i} className={"content-table__row"}>
+                            <td className={"content-table__body-cell content-table__body-cell--bold"}>{item.name}</td>
+                            <td className={"content-table__body-cell"}>{item.language}</td>
+                            <td className={"content-table__body-cell"}>{item.date}</td>
+                            <td className={"content-table__body-cell"}>{item.popularity}</td>
+                            <td className={"content-table__body-cell content-table__body-cell--star"}>{item.vote}</td>
                         </tr>
                     ))}
                     </tbody>
