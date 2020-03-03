@@ -23,7 +23,7 @@ function SideNav(props) {
                     <h1 className={"side-nav__title"}>Tv series</h1>
                     {props.state.showSelection ?
                         <div>
-                        <div className={"side-nav__selection-wrapper"}>
+                        <div className={"side-nav__list-wrapper"}>
                             <ul className={"side-nav__list"}>
                                 <li className={"side-nav__list__items"}>{props.state.selectedName}</li>
                                 <li className={"side-nav__list__items"}>{props.state.selectedLang}</li>
@@ -149,7 +149,6 @@ class App extends React.Component {
             selectedVote: rowData[4].innerText,
             showSelection: true
         })
-
     }
     render() {
         return(
