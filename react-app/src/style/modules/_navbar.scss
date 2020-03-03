@@ -1,0 +1,41 @@
+%font {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: Raleway, sans-serif;
+}
+
+.nav-bar-container {
+  margin: auto;
+  max-width: 1000px;
+}
+
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0 0 auto;
+  max-width: 100px;
+  width: 100%;
+  @extend %font;
+
+  &__text {
+    color: $color-nav-text;
+  }
+
+  &__selection {
+    outline: none;
+    background: url("../images/sort.svg");
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 10px;
+    width: 40px;
+    color: $color-table-header;
+    margin-left: 5px;
+
+    @extend %font;
+    @include appearance;
+
+    &__option {
+
+    }
+  }
+}
