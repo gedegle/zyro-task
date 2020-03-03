@@ -1,0 +1,19 @@
+@mixin shadow($color, $scale: -17px) {
+  -webkit-box-shadow: 0 0 44px $scale $color;
+  -moz-box-shadow: 0 0 44px $scale $color;
+  box-shadow: 0 0 44px $scale $color;
+}
+
+@mixin transition($parameter, $time: 1s) {
+  -webkit-transition: $parameter $time ease-in-out;
+  -moz-transition: $parameter $time ease-in-out;
+  -o-transition: $parameter $time ease-in-out;
+}
+@mixin appearance ($value: none) {
+  border: $value;
+  -webkit-appearance: $value;
+  -moz-appearance: $value;
+  appearance: $value;
+  -ms-appearance: $value;
+  outline: 0;
+}

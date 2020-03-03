@@ -80,7 +80,7 @@ class App extends React.Component {
     toggleClass(e) {
         let target;
 
-        //toggles up arrow class
+        //toggles up-arrow class
         if(e.target.childNodes.length > 0)
         {
             e.target.childNodes[1].classList.toggle('fa-chevron-up');
@@ -102,7 +102,25 @@ class App extends React.Component {
     }
     render() {
         return(
-            <div className={"table-container"}>
+            <div className={"content-wrapper"}>
+                <aside className={"side-nav"}>
+                    <div>
+                        <h1 className={"side-nav__title"}>Tv series</h1>
+                        <div>
+
+                        </div>
+                    </div>
+                </aside>
+                <div className={"table-wrapper"}>
+                <div className={"nav-bar-container"}>
+                    <nav className={"nav-bar"}>
+                        <div className={"nav-bar__text"}>Show: </div>
+                        <select className={"nav-bar__selection"}>
+                            <option value={"0"} className={"nav-bar__selection__option"}>20</option>
+                            <option value={"1"} className={"nav-bar__selection__option"}>All</option>
+                        </select>
+                    </nav>
+                </div>
                 <table className={"content-table"}>
                     <thead className={"content-table__header"}>
                     <tr>
@@ -114,22 +132,25 @@ class App extends React.Component {
                             <i className={"fas fa-chevron-down"}></i></th>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
                             <i className={"fas fa-chevron-down"}></i></th>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDB vote
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
                             <i className={"fas fa-chevron-down"}></i></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className={"content-table__body"}>
                     {this.state.movies.length > 0 && this.state.movies.map((item, i) => (
-                        <tr key={i} className={"content-table__row"}>
-                            <td className={"content-table__body-cell content-table__body-cell--bold"}>{item.name}</td>
-                            <td className={"content-table__body-cell"}>{item.language}</td>
-                            <td className={"content-table__body-cell"}>{item.date}</td>
-                            <td className={"content-table__body-cell"}>{item.popularity}</td>
-                            <td className={"content-table__body-cell content-table__body-cell--star"}>{item.vote}</td>
+                        <tr key={i} className={"content-table__body__row"}>
+                            <td className={"content-table__body__cell content-table__body__cell--bold"}>{item.name}</td>
+                            <td className={"content-table__body__cell"}>{item.language}</td>
+                            <td className={"content-table__body__cell"}>{item.date}</td>
+                            <td className={"content-table__body__cell"}>{item.popularity}</td>
+                            <td className={"content-table__body__cell content-table__body__cell--number"}>
+                                <i className={"fa fa-star fa-xs "}></i>
+                                {item.vote}</td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         );
     }
