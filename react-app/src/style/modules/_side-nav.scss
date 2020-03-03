@@ -13,25 +13,29 @@
     font-size: 36px;
     font-weight: 600;
     color: $color-black;
+    position: fixed;
   }
 
   &__heading-selection {
     font-size: 12px;
-    margin-left: auto;
     width: 65px;
     font-weight: 400;
     color: $color-table-header;
+    position: fixed;
+    top: 10%;
+    left: 36%;
   }
 
-  &__selection-wrapper {
+  &__list-wrapper {
     display: flex;
     max-width: 400px;
     width: 100%;
     background-color: $color-white;
-    margin: auto;
     max-height: 200px;
     border-radius: 2px;
     padding-left: 10px;
+    position: fixed;
+    top: 14%;
 
     @include shadow($color-cell-shadow);
   }
@@ -50,7 +54,13 @@
       box-sizing: border-box;
 
       &:nth-child(1) {
-        width: 150px;
+        width: 160px;
+      }
+      &:nth-child(2) {
+        width: 40px;
+      }
+      &:nth-child(5) {
+        width: 80px;
       }
     }
   }
