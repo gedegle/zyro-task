@@ -21,12 +21,17 @@
       &:hover {
         color: $color-table-header-hover;
 
+        .fas {
+          color: $color-table-header-hover;
+        }
       }
     }
   }
 
 }
 
-.icon-arrow {
-  margin-top: 10px;
+.fas {
+  vertical-align: middle;
+  margin-left: 8px;
+  color: transparent;
 }

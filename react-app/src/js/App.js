@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import {IoIosArrowDown} from "react-icons/io";
 
 class App extends React.Component {
     constructor() {
@@ -65,25 +64,58 @@ class App extends React.Component {
         };
     }
 
-    sortBy(key) {
+    sortBy(key,e) {
+        e.preventDefault();
+
         let arrayCopy = [...this.state.movies];
         arrayCopy.sort(this.compareByAsc(key));
+
         if(JSON.stringify(arrayCopy)===JSON.stringify(this.state.movies))
             arrayCopy.sort(this.compareByDesc(key));
+
         this.setState({movies: arrayCopy});
+        this.toggleClass(e);
     }
 
+    toggleClass(e) {
+        let target;
+
+        //toggles up arrow class
+        if(e.target.childNodes.length > 0)
+        {
+            e.target.childNodes[1].classList.toggle('fa-chevron-up');
+            target = e.target.childNodes[1];
+        }
+        else {
+            e.target.classList.toggle('fa-chevron-up');
+            target = e.target;
+        }
+
+        //restores remaining arrows to it's default position
+        let cellClasses = document.getElementsByClassName('fa-chevron-up');
+        if(cellClasses) {
+            for (let i = 0; i < cellClasses.length; i++) {
+                if (cellClasses[i] !== target)
+                    cellClasses[i].classList.remove('fa-chevron-up');
+            }
+        }
+    }
     render() {
         return(
             <div className={"table-container"}>
                 <table className={"content-table"}>
                     <thead className={"content-table__header"}>
                     <tr>
-                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('name')}>Name <span className={"icon-arrow"}><IoIosArrowDown/></span></th>
-                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('language')}>Language</th>
-                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('date')}>Release date</th>
-                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('popularity')}>Popularity</th>
-                        <th className={"content-table__header__cell"} onClick={() => this.sortBy('vote')}>IMDB vote</th>
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
+                            <i className={"fas fa-chevron-down"}></i></th>
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
+                            <i className={"fas fa-chevron-down"}></i></th>
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
+                            <i className={"fas fa-chevron-down"}></i></th>
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
+                            <i className={"fas fa-chevron-down"}></i></th>
+                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDB vote
+                            <i className={"fas fa-chevron-down"}></i></th>
                     </tr>
                     </thead>
                     <tbody>
