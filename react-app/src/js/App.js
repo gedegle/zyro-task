@@ -1,5 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import { FaChevronDown } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
+import { IconContext } from "react-icons";
 
 class App extends React.Component {
     constructor() {
@@ -81,22 +84,15 @@ class App extends React.Component {
         let target;
 
         //toggles up-arrow class
-        if(e.target.childNodes.length > 0)
-        {
-            e.target.childNodes[1].classList.toggle('fa-chevron-up');
-            target = e.target.childNodes[1];
-        }
-        else {
-            e.target.classList.toggle('fa-chevron-up');
-            target = e.target;
-        }
+        e.target.childNodes[1].childNodes[0].classList.toggle('fa-rotate-180');
+        target = e.target.childNodes[1].childNodes[0];
 
         //restores remaining arrows to it's default position
-        let cellClasses = document.getElementsByClassName('fa-chevron-up');
+        let cellClasses = document.getElementsByClassName('fa-rotate-180');
         if(cellClasses) {
             for (let i = 0; i < cellClasses.length; i++) {
                 if (cellClasses[i] !== target)
-                    cellClasses[i].classList.remove('fa-chevron-up');
+                    cellClasses[i].classList.remove('fa-rotate-180');
             }
         }
     }
@@ -104,11 +100,24 @@ class App extends React.Component {
         return(
             <div className={"content-wrapper"}>
                 <aside className={"side-nav"}>
-                    <div>
+                    <div className={"side-nav__wrapper"}>
                         <h1 className={"side-nav__title"}>Tv series</h1>
-                        <div>
-
+                        <div className={"side-nav__selection-wrapper"}>
+                            <ul className={"side-nav__list"}>
+                                <li className={"side-nav__list__items"}>The Simpsons</li>
+                                <li className={"side-nav__list__items"}>en</li>
+                                <li className={"side-nav__list__items"}>1989</li>
+                                <li className={"side-nav__list__items"}>266.711</li>
+                                <li className={"side-nav__list__items"}>
+                                    <IconContext.Provider
+                                    value={{ pointerEvents: "none"}}>
+                                <span className={"icon icon--star"}>
+                                    <FaStar />
+                                </span>
+                                </IconContext.Provider>7.2</li>
+                            </ul>
                         </div>
+                        <h2 className={"side-nav__heading-selection"}>Selection</h2>
                     </div>
                 </aside>
                 <div className={"table-wrapper"}>
@@ -125,15 +134,45 @@ class App extends React.Component {
                     <thead className={"content-table__header"}>
                     <tr>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
-                            <i className={"fas fa-chevron-down"}></i></th>
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span className={"icon"}>
+                                    <FaChevronDown />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
-                            <i className={"fas fa-chevron-down"}></i></th>
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span className={"icon"}>
+                                    <FaChevronDown />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
-                            <i className={"fas fa-chevron-down"}></i></th>
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span className={"icon"}>
+                                    <FaChevronDown />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
-                            <i className={"fas fa-chevron-down"}></i></th>
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span className={"icon"}>
+                                    <FaChevronDown />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
                         <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
-                            <i className={"fas fa-chevron-down"}></i></th>
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span className={"icon"}>
+                                    <FaChevronDown />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
                     </tr>
                     </thead>
                     <tbody className={"content-table__body"}>
@@ -144,7 +183,12 @@ class App extends React.Component {
                             <td className={"content-table__body__cell"}>{item.date}</td>
                             <td className={"content-table__body__cell"}>{item.popularity}</td>
                             <td className={"content-table__body__cell content-table__body__cell--number"}>
-                                <i className={"fa fa-star fa-xs "}></i>
+                                <IconContext.Provider
+                                    value={{ pointerEvents: "none"}}>
+                                <span className={"icon icon--star"}>
+                                    <FaStar />
+                                </span>
+                                </IconContext.Provider>
                                 {item.vote}</td>
                         </tr>
                     ))}

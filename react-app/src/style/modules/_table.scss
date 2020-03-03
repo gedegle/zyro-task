@@ -10,6 +10,7 @@
   width: 100%;
   padding-bottom: 30px;
   @include shadow(#bababa, 10px);
+  background-color: $color-white;
 }
 .content-table {
   margin: 0;
@@ -34,7 +35,7 @@
       &:hover {
         color: $color-table-header-hover;
 
-        .fas {
+        .icon {
           color: $color-table-header-hover;
         }
       }
@@ -46,7 +47,7 @@
       height: 60px;
       cursor: pointer;
       border-radius: 2px;
-      @include shadow(#bababa);
+      @include shadow($color-cell-shadow);
       @include transition(all, .3s);
 
       &:hover {
@@ -68,14 +69,29 @@
   }
 }
 
+/*
 .fas {
-  vertical-align: middle;
-  margin-left: 8px;
-  color: transparent;
+
+  pointer-events: none;
 }
 
 .fa {
   margin-right: 4px;
   color: $color-table-header-hover;
   font-size: 0.55em;
+  pointer-events: none;
+}
+*/
+
+.icon {
+  vertical-align: middle;
+  margin-left: 8px;
+  color: transparent;
+  pointer-events: none;
+
+  &--star {
+    margin-right: 4px;
+    color: $color-table-header-hover;
+    font-size: 0.55em;
+  }
 }
