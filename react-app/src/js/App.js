@@ -2,13 +2,19 @@ import React from 'react';
 import axios from 'axios';
 import { FaChevronDown } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
+
 import { IconContext } from "react-icons";
-function NavBar() {
+
+const _ = require("underscore");
+
+function NavBar(props) {
     return (
         <div className={"nav-bar-container"}>
             <nav className={"nav-bar"}>
                 <div className={"nav-bar__text"}>Show: </div>
-                <select className={"nav-bar__selection"}>
+                <select onChange={props.handleShowPerPage} className={"nav-bar__selection"}>
                     <option value={"0"} className={"nav-bar__selection__option"}>20</option>
                     <option value={"1"} className={"nav-bar__selection__option"}>All</option>
                 </select>
@@ -44,6 +50,7 @@ function SideNav(props) {
             </aside>
         )
 }
+
 class App extends React.Component {
     constructor() {
         super();
@@ -51,48 +58,127 @@ class App extends React.Component {
         this.state = {
             pageNumber: 1,
             movies: [],
-            showSelection: false
+            showSelection: false,
+            appendMovies: false,
+            showAll: false,
+            btnBackDisabled: true,
+            btnForwDisabled: false
         };
 
         this.compareByDesc.bind(this);
         this.compareByAsc.bind(this);
-        this.sortBy.bind(this);
+        this.sortBy = this.sortBy.bind(this);
         this.onRowClick = this.onRowClick.bind(this);
-    }
+        this.handlePagination = this.handlePagination.bind(this);
+        this.trackScrolling = this.trackScrolling.bind(this);
 
+        this.delayedCallback = _.debounce(this.receiveData, 500);
+    }
+    componentDidMount() {
+        this.axiosCancelSource = axios.CancelToken.source();
+        this.receiveData();
+        document.addEventListener('scroll', this.trackScrolling);
+    }
+    componentWillUnmount() {
+        this.axiosCancelSource.cancel('Component unmounted.');
+        document.removeEventListener('scroll', this.trackScrolling);
+    }
     receiveData() {
+        let tempMovieArr = [],
+        pNum = this.state.pageNumber;
+
+        if(this.state.appendMovies)
+            pNum = this.state.pageNumber + 1;
+
         const url = "https://api.themoviedb.org/3/discover/tv?api_key=d847b6fbf410655f6b71421e46883b4f&language=en-US&" +
-            "sort_by=popularity.desc&page="+this.state.pageNumber+
+            "sort_by=popularity.desc&page=" + pNum +
             "&timezone=America%2FNew_York&include_null_first_air_dates=false";
-        let tempMovieArr = [];
-        axios.get(url,{ cancelToken: this.axiosCancelSource.token }).then( res => {
-            res.data.results.forEach((item)=>{
+
+
+        axios.get(url, {cancelToken: this.axiosCancelSource.token}).then(res => {
+            res.data.results.forEach((item) => {
                 tempMovieArr.push({
+                    "id": item.id,
                     "name": item.name,
                     "vote": item.vote_average,
                     "language": item.original_language,
-                    "date": item.first_air_date.slice(0,4),
+                    "date": item.first_air_date.slice(0, 4),
                     "popularity": item.popularity
                 });
             });
+
+            if(this.state.appendMovies)
+                tempMovieArr = this.state.movies.concat(tempMovieArr);
+
+            tempMovieArr.filter((item, i) => tempMovieArr.indexOf(item) !== i);
+
             this.setState({
-                movies: tempMovieArr
+                movies: tempMovieArr,
+                totalPages: res.data.total_pages,
+                pageNumber: pNum
             })
+
         }).catch(function (thrown) {
             if (axios.isCancel(thrown)) {
                 console.log('Request canceled', thrown.message);
             }
         });
     }
+    handleShowPerPage() {
+        this.setState({
+            showAll: !this.state.showAll,
+            appendMovies: false,
+            pageNumber: 1
+        }, function () {
+            this.delayedCallback();
+        });
+    };
+    handlePagination(e) {
+        e.preventDefault();
+        let pNum, bBtn, fBtn;
 
-    componentDidMount() {
-        this.axiosCancelSource = axios.CancelToken.source();
-        this.receiveData();
-    }
-    componentWillUnmount() {
-        this.axiosCancelSource.cancel('Component unmounted.')
-    }
+        if(e.target.id === "forward-arrow") {
+            pNum = this.state.pageNumber+1;
+            bBtn = false;
+        } else if(e.target.id === "back-arrow") {
+            if(this.state.pageNumber > 2){
+                pNum = this.state.pageNumber-1;
+                fBtn = false;
+            } else {
+                pNum = this.state.pageNumber-1;
+                bBtn = true;
+            }
+        } else {
+            pNum = parseInt(e.target.innerText);
 
+            if(e.target.innerText == 1) {
+                bBtn = true;
+            } else if(e.target.innerText == 500) {
+                fBtn = true;
+            }
+        }
+
+        this.setState({
+            pageNumber: pNum,
+            btnBackDisabled: bBtn,
+            btnForwDisabled: fBtn
+        }, function () {
+            this.receiveData();
+        });
+
+    }
+    trackScrolling() {
+        if (this.state.showAll)
+            if (
+                window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight-10 &&
+                window.innerHeight + document.documentElement.scrollTop <= document.documentElement.scrollHeight
+            ) {
+                this.setState({
+                    appendMovies: true
+                });
+                this.delayedCallback();
+            }
+    };
     compareByAsc(key) {
         return function (a, b) {
             if (a[key] < b[key]) return -1;
@@ -107,59 +193,70 @@ class App extends React.Component {
             return 0;
         };
     }
-
-    sortBy(key,e) {
+    sortBy(key, e) {
         e.preventDefault();
 
         let arrayCopy = [...this.state.movies];
         arrayCopy.sort(this.compareByAsc(key));
 
-        if(JSON.stringify(arrayCopy)===JSON.stringify(this.state.movies))
+        if (JSON.stringify(arrayCopy) === JSON.stringify(this.state.movies))
             arrayCopy.sort(this.compareByDesc(key));
 
-        this.setState({movies: arrayCopy});
-        this.toggleClass(e);
+        this.setState({
+            movies: arrayCopy,
+            selectedSort: e.target.id,
+            prevSelSort: this.state.selectedSort
+        }, function () {
+            this.toggleClasses(this.state.selectedSort,'fa-rotate-180');
+            this.removeClasses(this.state.prevSelSort, this.state.selectedSort, 'fa-rotate-180');
+        });
     }
-
-    toggleClass(e) {
-        let target;
-
-        //toggles up-arrow class
-        e.target.childNodes[1].childNodes[0].classList.toggle('fa-rotate-180');
-        target = e.target.childNodes[1].childNodes[0];
-
-        //restores remaining arrows to it's default position
-        let cellClasses = document.getElementsByClassName('fa-rotate-180');
-        if(cellClasses) {
-            for (let i = 0; i < cellClasses.length; i++) {
-                if (cellClasses[i] !== target)
-                    cellClasses[i].classList.remove('fa-rotate-180');
-            }
+    removeClasses(prevSelected, selected, className) {
+        let prevClass = document.getElementById(prevSelected);
+        if (prevClass) {
+            if(prevSelected !== selected)
+                prevClass.childNodes[1].childNodes[0].classList.remove(className);
         }
+    }
+    toggleClasses(selected, className) {
+        let target = document.getElementById(selected);
+        if(target)
+            target.childNodes[1].childNodes[0].classList.toggle(className);
     }
     onRowClick(e) {
         e.preventDefault();
         let rowData = e.target.parentNode.childNodes;
 
         this.setState({
-            selectedName: rowData[0].innerText,
-            selectedLang: rowData[1].innerText,
-            selectedYear: rowData[2].innerText,
-            selectedPop: rowData[3].innerText,
-            selectedVote: rowData[4].innerText,
-            showSelection: true
-        })
+            selectedName: rowData[1].innerText,
+            selectedLang: rowData[2].innerText,
+            selectedYear: rowData[3].innerText,
+            selectedPop: rowData[4].innerText,
+            selectedVote: rowData[5].innerText,
+            showSelection: true,
+            selected: e.target.parentNode.id,
+            prevSelected: this.state.selected
+        });
     }
     render() {
         return(
             <div className={"content-wrapper"}>
                 <SideNav state={this.state}/>
                 <div className={"table-wrapper"}>
-                <NavBar />
+                <NavBar handleShowPerPage={this.handleShowPerPage.bind(this)} />
                 <table className={"content-table"}>
                     <thead className={"content-table__header"}>
                     <tr>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
+                        <th id={"id"} className={"content-table__header__cell"}>ID</th>
+                        <th id={"name"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
+                            <IconContext.Provider
+                                value={{ pointerEvents: "none"}}>
+                                <span  className={"icon"}>
+                                    <FaChevronDown  />
+                                </span>
+                            </IconContext.Provider>
+                        </th>
+                        <th id={"lang"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
                             <IconContext.Provider
                                 value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
@@ -167,7 +264,7 @@ class App extends React.Component {
                                 </span>
                             </IconContext.Provider>
                         </th>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
+                        <th id={"date"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
                             <IconContext.Provider
                                 value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
@@ -175,7 +272,7 @@ class App extends React.Component {
                                 </span>
                             </IconContext.Provider>
                         </th>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
+                        <th id={"pop"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
                             <IconContext.Provider
                                 value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
@@ -183,15 +280,7 @@ class App extends React.Component {
                                 </span>
                             </IconContext.Provider>
                         </th>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
-                                <span className={"icon"}>
-                                    <FaChevronDown />
-                                </span>
-                            </IconContext.Provider>
-                        </th>
-                        <th className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
+                        <th id={"vote"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
                             <IconContext.Provider
                                 value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
@@ -203,7 +292,8 @@ class App extends React.Component {
                     </thead>
                     <tbody className={"content-table__body"}>
                     {this.state.movies.length > 0 && this.state.movies.map((item, i) => (
-                        <tr key={i} className={"content-table__body__row"} onClick={this.onRowClick}>
+                        <tr key={i} id={item.id} className={this.state.selected == item.id ? "content-table__body__row row-on-focus" : "content-table__body__row"} onClick={this.onRowClick}>
+                            <td className={"content-table__body__cell content-table__body__cell--small-number"}>{item.id}</td>
                             <td className={"content-table__body__cell content-table__body__cell--bold"}>{item.name}</td>
                             <td className={"content-table__body__cell"}>{item.language}</td>
                             <td className={"content-table__body__cell"}>{item.date}</td>
@@ -211,7 +301,7 @@ class App extends React.Component {
                             <td className={"content-table__body__cell content-table__body__cell--number"}>
                                 <IconContext.Provider
                                     value={{ pointerEvents: "none"}}>
-                                <span className={"icon icon--star"}>
+                                <span className={this.state.selected == item.id ? "icon icon--star icon--star--colour-white" : "icon icon--star" }>
                                     <FaStar />
                                 </span>
                                 </IconContext.Provider>
@@ -221,6 +311,29 @@ class App extends React.Component {
                     ))}
                     </tbody>
                 </table>
+                </div>
+                <div className={"page-wrapper"}>
+                    <button disabled={this.state.btnBackDisabled} id={"back-arrow"} onClick={this.handlePagination}>
+                        <IconContext.Provider
+                            value={{ pointerEvents: "none"}}>
+                        <span className={"icon icon--page-arrows"}>
+                            <IoIosArrowBack />
+                        </span>
+                        </IconContext.Provider>
+                    </button>
+                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber))}</button>
+                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+1)}</button>
+                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+2)}</button>
+                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+3)}</button>
+                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+4)}</button>
+                    <button disabled={this.state.btnForwDisabled} id={"forward-arrow"} onClick={this.handlePagination}>
+                        <IconContext.Provider
+                            value={{ pointerEvents: "none"}}>
+                        <span className={"icon icon--page-arrows"}>
+                            <IoIosArrowForward />
+                        </span>
+                        </IconContext.Provider>
+                    </button>
                 </div>
             </div>
         );

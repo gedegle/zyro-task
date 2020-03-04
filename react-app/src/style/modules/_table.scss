@@ -5,6 +5,7 @@
   width: 100%;
   position: relative;
   margin:0 auto;
+  overflow-x: hidden;
 }
 .table-wrapper {
   width: 100%;
@@ -12,7 +13,7 @@
   @include shadow(#bababa, 10px);
   background-color: $color-white;
   z-index: 1;
-  position: relative;
+
 }
 .content-table {
   margin: 0;
@@ -22,14 +23,18 @@
   padding: 30px;
   box-sizing: border-box;
   border-collapse:separate;
-  border-spacing:0 7px;
+  border-spacing: 0 7px;
   flex-grow:1;
-
+  position: relative;
 
   &__header {
     text-align: left;
     font-size: 12px;
     color: $color-table-header;
+    position: sticky;
+   // top: 10%;
+/*    max-width: 980px;
+    width: 100%;*/
 
     &__cell {
       cursor: pointer;
