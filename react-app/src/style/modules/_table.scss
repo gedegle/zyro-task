@@ -1,47 +1,59 @@
-@import '../base/mixins.scss';
+@import "../mixins/helpers";
+@import "../mixins/media-queries";
 
 .content-wrapper {
   display: flex;
-  width: 100%;
-  position: relative;
-  margin:0 auto;
+  margin: 0 auto;
   overflow-x: hidden;
-}
-.table-area-container {
+  position: relative;
   width: 100%;
+
+  @include mq-until(md) {
+    flex-direction: column;
+  }
+}
+
+.table-area-container {
   display: flex;
-  height: 100%;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .table-wrapper {
-  width: 100%;
-  height: 100%;
-  @include shadow(#bababa, 10px);
   background-color: $color-white;
+  height: 100%;
+  width: 100%;
+  word-break: normal;
   z-index: 1;
+
+  @include shadow(#bababa, 10px, -40px);
+  @include mq-until(md) {
+    box-shadow: none;
+    font-size: 14px;
+    margin-top: 220px;
+    word-break: break-word;
+  }
 }
+
 .content-table {
+  border-collapse: separate;
+  border-spacing: 0 7px;
+  box-sizing: border-box;
+  flex-grow: 1;
+  height: 100%;
   margin: 0;
   max-width: 1200px;
-  width: 100%;
-  height: 100%;
   padding: 30px;
-  box-sizing: border-box;
-  border-collapse:separate;
-  border-spacing: 0 7px;
-  flex-grow:1;
   position: relative;
   table-layout: fixed;
+  width: 100%;
 
   &__header {
-    text-align: left;
-    font-size: 12px;
     color: $color-table-header;
+    font-size: 12px;
     position: sticky;
-   // top: 10%;
-/*    max-width: 980px;
-    width: 100%;*/
+    text-align: left;
 
     &__cell {
       cursor: pointer;
@@ -59,17 +71,18 @@
 
   &__body {
     &__row {
-      height: 60px;
-      cursor: pointer;
       border-radius: 2px;
+      cursor: pointer;
+      height: 60px;
       @include shadow($color-cell-shadow);
-      @include transition(all, .3s);
+      @include transition(all, 0.3s);
 
       &:hover {
         transform: scale(1.05);
         @include shadow(#bababa, 5px);
       }
     }
+
     &__cell {
       padding: 15px;
 

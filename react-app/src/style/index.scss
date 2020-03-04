@@ -1,11 +1,12 @@
-@import '/base/colors.scss';
-@import '/base/variables.scss';
-@import '/modules/table.scss';
-@import '/base/mixins.scss';
-@import '/modules/navbar.scss';
-@import '/modules/side-nav.scss';
-@import '/modules/icons.scss';
-@import '/modules/pagination.scss';
+@import "/base/colors";
+@import "/base/variables";
+@import "/modules/table";
+@import "mixins/helpers";
+@import "/mixins/media-queries";
+@import "/modules/navbar";
+@import "/modules/side-nav";
+@import "/modules/icons";
+@import "/modules/pagination";
 
 html,
 body {
@@ -16,8 +17,8 @@ body {
 }
 
 body {
-  color: $base-text-color;
-  font-size: $base-font-size;
-  font-family: Raleway, sans-serif;
   background-color: #ebecec;
+  color: $base-text-color;
+  font-family: Raleway, sans-serif;
+  font-size: $base-font-size;
 }

@@ -1,4 +1,4 @@
-@mixin hover-active-color ($color: $color-table-header-hover) {
+@mixin hover-active-color($color: $color-table-header-hover) {
   background-color: $color;
   color: $color-white;
 }
@@ -13,26 +13,26 @@
   max-width: 430px;
 
   &__button {
-    max-width: 47px;
-    width: 100%;
-    padding: 12px 2px;
+    border: none;
+    border-radius: 2px;
     box-sizing: border-box;
     font-family: Raleway, sans-serif;
-    border: none;
     margin: 10px 0;
-    border-radius: 2px;
+    max-width: 47px;
+    padding: 12px 2px;
+    width: 100%;
 
     &--active {
       @include hover-active-color;
     }
 
-    &:hover:not([disabled]),
-     &:hover:not([disabled]) .icon--page-arrows {
-       @include hover-active-color(#c1a5f3);
-     }
-
     &:not([disabled]) {
       cursor: pointer;
+    }
+
+    &:hover:not([disabled]),
+    &:hover:not([disabled]) .icon--page-arrows {
+      @include hover-active-color(#c1a5f3);
     }
   }
 }

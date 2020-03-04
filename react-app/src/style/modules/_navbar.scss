@@ -1,7 +1,7 @@
 %font {
+  font-family: Raleway, sans-serif;
   font-size: 13px;
   font-weight: 600;
-  font-family: Raleway, sans-serif;
 }
 
 .nav-bar-container {
@@ -22,20 +22,16 @@
   }
 
   &__selection {
-    outline: none;
     background: url("../images/sort.svg");
-    background-repeat: no-repeat;
     background-position: right;
+    background-repeat: no-repeat;
     background-size: 10px;
-    width: 40px;
     color: $color-table-header;
     margin-left: 5px;
+    outline: none;
+    width: 40px;
 
     @extend %font;
     @include appearance;
-
-    &__option {
-
-    }
   }
 }

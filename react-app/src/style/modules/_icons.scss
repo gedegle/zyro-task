@@ -1,13 +1,13 @@
 .icon {
-  vertical-align: middle;
-  margin-left: 8px;
   color: transparent;
+  margin-left: 8px;
   pointer-events: none;
+  vertical-align: middle;
 
   &--star {
-    margin-right: 4px;
     color: $color-table-header-hover;
     font-size: 0.55em;
+    margin-right: 4px;
 
     &--colour-white {
       color: $color-white;
@@ -15,9 +15,9 @@
   }
 
   &--page-arrows {
-    pointer-events: none;
-    margin: 0;
     color: grey;
+    margin: 0;
+    pointer-events: none;
   }
 }
 

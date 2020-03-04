@@ -11,7 +11,8 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-icons": "^3.9.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "stylelint": "^13.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -20,7 +21,8 @@
     "eject": "react-scripts eject",
     "webpack-dev-server": "webpack-dev-server",
     "dev": "webpack-dev-server --mode=development",
-    "prod": "webpack --mode=production"
+    "prod": "webpack --mode=production",
+    "lint:styles": "stylelint \"src/style/**/*.scss\" --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,7 +51,13 @@
     "lodash.debounce": "^4.0.8",
     "node-sass": "^4.13.1",
     "path": "^0.12.7",
+    "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
+    "stylelint-config-prettier": "^8.0.1",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-order": "^4.0.0",
+    "stylelint-prettier": "^1.1.2",
+    "stylelint-scss": "^3.14.2",
     "underscore": "^1.9.2",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11",

@@ -1,66 +1,108 @@
 .side-nav {
   display: flex;
-  max-width: 400px;
-  width: 100%;
   margin: 0;
+  max-width: 400px;
   padding-left: 25px;
+  width: 100%;
 
-  &__wrapper{
+  @include mq-between(md, lg) {
+    max-width: 300px;
+  }
+  @include mq-until(md) {
+    background-color: $color-white;
+    border-bottom: 1px solid $color-sidenav-border;
+    font-size: 14px;
+    height: 220px;
+    max-width: 800px;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+  }
+
+  &__wrapper {
     width: 100%;
   }
 
   &__title {
+    color: $color-black;
     font-size: 36px;
     font-weight: 600;
-    color: $color-black;
     position: fixed;
+
+    @include mq-until(md) {
+      padding-left: 5%;
+    }
   }
 
   &__heading-selection {
-    font-size: 12px;
-    width: 65px;
-    font-weight: 400;
     color: $color-table-header;
-    position: fixed;
-    top: 10%;
-    left: 36%;
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: 15px;
+    width: 65px;
   }
 
   &__list-wrapper {
-    display: flex;
-    max-width: 400px;
-    width: 100%;
     background-color: $color-white;
-    max-height: 200px;
     border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    max-width: 400px;
     padding-left: 10px;
     position: fixed;
     top: 14%;
+    width: 100%;
 
     @include shadow($color-cell-shadow);
+    @include mq-between(md, lg) {
+      max-width: 300px;
+    }
+    @include mq-until(md) {
+      max-width: 700px;
+    }
   }
 
   &__list {
     display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin-left: auto;
     flex-wrap: wrap;
+    list-style-type: none;
+    margin-left: auto;
+    padding: 0;
+
+    @include mq-until(md) {
+      margin-left: 0;
+    }
 
     &__items {
-      padding: 5px 20px 5px 0;
-      margin: auto;
-      width: 60px;
       box-sizing: border-box;
+      margin: auto;
+      padding: 5px 20px 5px 0;
+      width: 60px;
+      word-break: break-word;
 
       &:nth-child(1) {
         width: 160px;
       }
+
       &:nth-child(2) {
         width: 40px;
       }
+
       &:nth-child(5) {
         width: 80px;
+      }
+
+      @include mq-between(md, lg) {
+        padding-right: 5px;
+        width: 50px;
+
+        &:nth-child(1) {
+          width: 80px;
+        }
       }
     }
   }
