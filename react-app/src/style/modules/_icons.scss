@@ -8,5 +8,9 @@
     margin-right: 4px;
     color: $color-table-header-hover;
     font-size: 0.55em;
+
+    &--colour-white {
+      color: $color-white;
+    }
   }
 }

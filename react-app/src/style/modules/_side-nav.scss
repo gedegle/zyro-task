@@ -23,7 +23,7 @@
     color: $color-table-header;
     position: fixed;
     top: 10%;
-    left: 36%;
+    left: 23.5%;
   }
 
   &__list-wrapper {
@@ -36,6 +36,7 @@
     padding-left: 10px;
     position: fixed;
     top: 14%;
+    left: 2%;
 
     @include shadow($color-cell-shadow);
   }

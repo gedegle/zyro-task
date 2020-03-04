@@ -65,6 +65,10 @@
         font-weight: 800;
       }
 
+      &--small-number {
+        font-size: 12px;
+      }
+
       &--number {
         font-size: 18px;
       }
@@ -73,5 +77,6 @@
 }
 
 .row-on-focus {
-
+  background-color: #8042e4;
+  color: white;
 }
