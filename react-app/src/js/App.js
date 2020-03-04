@@ -15,8 +15,8 @@ function NavBar(props) {
             <nav className={"nav-bar"}>
                 <div className={"nav-bar__text"}>Show: </div>
                 <select onChange={props.handleShowPerPage} className={"nav-bar__selection"}>
-                    <option value={"0"} className={"nav-bar__selection__option"}>20</option>
-                    <option value={"1"} className={"nav-bar__selection__option"}>All</option>
+                    <option value={"0"}>20</option>
+                    <option value={"1"}>All</option>
                 </select>
             </nav>
         </div>
@@ -28,8 +28,8 @@ function SideNav(props) {
                 <div className={"side-nav__wrapper"}>
                     <h1 className={"side-nav__title"}>Tv series</h1>
                     {props.state.showSelection ?
-                        <div>
                         <div className={"side-nav__list-wrapper"}>
+                            <h2 className = {"side-nav__heading-selection"}> Selection </h2>
                             <ul className={"side-nav__list"}>
                                 <li className={"side-nav__list__items"}>{props.state.selectedName}</li>
                                 <li className={"side-nav__list__items"}>{props.state.selectedLang}</li>
@@ -44,7 +44,6 @@ function SideNav(props) {
                                     </IconContext.Provider>{props.state.selectedVote}</li>
                             </ul>
                         </div>
-                            <h2 className = {"side-nav__heading-selection"}> Selection </h2></div>
                     : null }
                 </div>
             </aside>

@@ -1,0 +1,28 @@
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+@mixin mq-until($size-name, $breakpoints-map: $breakpoints) {
+  @media (max-width: map-get($breakpoints-map, $size-name) - 1) {
+    @content;
+  }
+}
+
+@mixin mq-from($size-name, $breakpoints-map: $breakpoints) {
+  @media (min-width: map-get($breakpoints-map, $size-name)) {
+    @content;
+  }
+}
+
+@mixin mq-between(
+  $size-name-from,
+  $size-name-until,
+  $breakpoints-map: $breakpoints
+) {
+  @media (min-width: map-get($breakpoints-map, $size-name-from)) and (max-width: map-get($breakpoints-map, $size-name-until) - 1) {
+    @content;
+  }
+}

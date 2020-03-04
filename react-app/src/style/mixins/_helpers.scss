@@ -1,7 +1,7 @@
-@mixin shadow($color, $scale: -17px) {
-  -webkit-box-shadow: 0 0 44px $scale $color;
-  -moz-box-shadow: 0 0 44px $scale $color;
-  box-shadow: 0 0 44px $scale $color;
+@mixin shadow($color, $scale: -17px, $vertically: 0) {
+  -webkit-box-shadow: 0 $vertically 44px $scale $color;
+  -moz-box-shadow: 0 $vertically 44px $scale $color;
+  box-shadow: 0 $vertically 44px $scale $color;
 }
 
 @mixin transition($parameter, $time: 1s) {
@@ -9,11 +9,11 @@
   -moz-transition: $parameter $time ease-in-out;
   -o-transition: $parameter $time ease-in-out;
 }
-@mixin appearance ($value: none) {
-  border: $value;
+@mixin appearance($value: none) {
   -webkit-appearance: $value;
   -moz-appearance: $value;
-  appearance: $value;
   -ms-appearance: $value;
+  appearance: $value;
+  border: $value;
   outline: 0;
 }
