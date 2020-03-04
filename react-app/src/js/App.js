@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import { IconContext } from "react-icons";
 import { FaChevronDown } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-
-import { IconContext } from "react-icons";
+import loadingIcon from "./../images/loading.svg";
 
 const _ = require("underscore");
 
@@ -115,7 +115,8 @@ class App extends React.Component {
             this.setState({
                 movies: tempMovieArr,
                 totalPages: res.data.total_pages,
-                pageNumber: pNum
+                pageNumber: pNum,
+                loading: false
             })
 
         }).catch(function (thrown) {
@@ -135,28 +136,52 @@ class App extends React.Component {
     };
     handlePagination(e) {
         e.preventDefault();
-        let pNum, bBtn, fBtn;
+        let pNum,
+            bBtn,
+            fBtn;
 
         if(e.target.id === "forward-arrow") {
+            if(this.state.pageNumber < 500 && this.state.pageNumber > 498)
+            {
+                fBtn=true;
+                bBtn=false;
+            }
             pNum = this.state.pageNumber+1;
-            bBtn = false;
         } else if(e.target.id === "back-arrow") {
-            if(this.state.pageNumber > 2){
-                pNum = this.state.pageNumber-1;
-                fBtn = false;
-            } else {
-                pNum = this.state.pageNumber-1;
+            if(this.state.pageNumber < 3)
+                {
+                    bBtn = true;
+                    fBtn = false;
+                }
+            pNum = this.state.pageNumber-1;
+        } else if(e.target.id === "first-page") {
+            {
+                pNum = 1;
                 bBtn = true;
+                fBtn = false;
+            }
+        } else if(e.target.id === "last-page") {
+            {
+                pNum = this.state.totalPages;
+                fBtn=true;
+                bBtn=false;
             }
         } else {
-            pNum = parseInt(e.target.innerText);
-
-            if(e.target.innerText == 1) {
+            if(parseInt(e.target.innerText) === 500)
+            {
+                fBtn=true;
+                bBtn=false;
+            } else if(parseInt(e.target.innerText) === 1)
+            {
                 bBtn = true;
-            } else if(e.target.innerText == 500) {
-                fBtn = true;
+                fBtn = false;
             }
+            pNum = parseInt(e.target.innerText);
         }
+
+       /* if(this.state.pageNumber < 3) bBtn = true;
+            else bBtn = false;
+        if(this.state.pageNumber < 500) fBtn=true;*/
 
         this.setState({
             pageNumber: pNum,
@@ -174,7 +199,8 @@ class App extends React.Component {
                 window.innerHeight + document.documentElement.scrollTop <= document.documentElement.scrollHeight
             ) {
                 this.setState({
-                    appendMovies: true
+                    appendMovies: true,
+                    loading: true
                 });
                 this.delayedCallback();
             }
@@ -239,101 +265,125 @@ class App extends React.Component {
         });
     }
     render() {
+        const buttons = [];
+        let pNum;
+        for(let i=0; i<5; i++) {
+            pNum = this.state.pageNumber+i;
+            if(this.state.pageNumber+i <= 500 && this.state.pageNumber+i > 0)
+                buttons.push(<button
+                key={i}
+                className={this.state.pageNumber == pNum ?
+                    "page-buttons__button page-buttons__button--active" :
+                    "page-buttons__button"}
+                onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+i)}
+            </button>)}
         return(
             <div className={"content-wrapper"}>
                 <SideNav state={this.state}/>
-                <div className={"table-wrapper"}>
-                <NavBar handleShowPerPage={this.handleShowPerPage.bind(this)} />
-                <table className={"content-table"}>
-                    <thead className={"content-table__header"}>
-                    <tr>
-                        <th id={"id"} className={"content-table__header__cell"}>ID</th>
-                        <th id={"name"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
+                <div className={"table-area-container"}>
+                    <div className={"table-wrapper"}>
+                        <NavBar handleShowPerPage={this.handleShowPerPage.bind(this)} />
+                        <table className={"content-table"}>
+                            <thead className={"content-table__header"}>
+                            <tr>
+                                <th id={"id"} className={"content-table__header__cell"}>ID</th>
+                                <th id={"name"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('name',e)}>Name
+                                    <IconContext.Provider
+                                        value={{ pointerEvents: "none"}}>
                                 <span  className={"icon"}>
                                     <FaChevronDown  />
                                 </span>
-                            </IconContext.Provider>
-                        </th>
-                        <th id={"lang"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
+                                    </IconContext.Provider>
+                                </th>
+                                <th id={"lang"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('language',e)}>Language
+                                    <IconContext.Provider
+                                        value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
                                     <FaChevronDown />
                                 </span>
-                            </IconContext.Provider>
-                        </th>
-                        <th id={"date"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
+                                    </IconContext.Provider>
+                                </th>
+                                <th id={"date"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('date',e)}>Release date
+                                    <IconContext.Provider
+                                        value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
                                     <FaChevronDown />
                                 </span>
-                            </IconContext.Provider>
-                        </th>
-                        <th id={"pop"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
+                                    </IconContext.Provider>
+                                </th>
+                                <th id={"pop"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('popularity',e)}>Popularity
+                                    <IconContext.Provider
+                                        value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
                                     <FaChevronDown />
                                 </span>
-                            </IconContext.Provider>
-                        </th>
-                        <th id={"vote"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
-                            <IconContext.Provider
-                                value={{ pointerEvents: "none"}}>
+                                    </IconContext.Provider>
+                                </th>
+                                <th id={"vote"} className={"content-table__header__cell icon-arrow"} onClick={(e) => this.sortBy('vote',e)}>IMDb vote
+                                    <IconContext.Provider
+                                        value={{ pointerEvents: "none"}}>
                                 <span className={"icon"}>
                                     <FaChevronDown />
                                 </span>
-                            </IconContext.Provider>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody className={"content-table__body"}>
-                    {this.state.movies.length > 0 && this.state.movies.map((item, i) => (
-                        <tr key={i} id={item.id} className={this.state.selected == item.id ? "content-table__body__row row-on-focus" : "content-table__body__row"} onClick={this.onRowClick}>
-                            <td className={"content-table__body__cell content-table__body__cell--small-number"}>{item.id}</td>
-                            <td className={"content-table__body__cell content-table__body__cell--bold"}>{item.name}</td>
-                            <td className={"content-table__body__cell"}>{item.language}</td>
-                            <td className={"content-table__body__cell"}>{item.date}</td>
-                            <td className={"content-table__body__cell"}>{item.popularity}</td>
-                            <td className={"content-table__body__cell content-table__body__cell--number"}>
-                                <IconContext.Provider
-                                    value={{ pointerEvents: "none"}}>
+                                    </IconContext.Provider>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody className={"content-table__body"}>
+                            {this.state.movies.length > 0 && this.state.movies.map((item, i) => (
+                                <tr key={i} id={item.id} className={this.state.selected == item.id ? "content-table__body__row row-on-focus" : "content-table__body__row"} onClick={this.onRowClick}>
+                                    <td className={"content-table__body__cell content-table__body__cell--small-number"}>{item.id}</td>
+                                    <td className={"content-table__body__cell content-table__body__cell--bold"}>{item.name}</td>
+                                    <td className={"content-table__body__cell"}>{item.language}</td>
+                                    <td className={"content-table__body__cell"}>{item.date}</td>
+                                    <td className={"content-table__body__cell"}>{item.popularity}</td>
+                                    <td className={"content-table__body__cell content-table__body__cell--number"}>
+                                        <IconContext.Provider
+                                            value={{ pointerEvents: "none"}}>
                                 <span className={this.state.selected == item.id ? "icon icon--star icon--star--colour-white" : "icon icon--star" }>
                                     <FaStar />
                                 </span>
-                                </IconContext.Provider>
-                                {item.vote}
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-                </div>
-                <div className={"page-wrapper"}>
-                    <button disabled={this.state.btnBackDisabled} id={"back-arrow"} onClick={this.handlePagination}>
-                        <IconContext.Provider
-                            value={{ pointerEvents: "none"}}>
-                        <span className={"icon icon--page-arrows"}>
-                            <IoIosArrowBack />
-                        </span>
-                        </IconContext.Provider>
-                    </button>
-                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber))}</button>
-                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+1)}</button>
-                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+2)}</button>
-                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+3)}</button>
-                    <button onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+4)}</button>
-                    <button disabled={this.state.btnForwDisabled} id={"forward-arrow"} onClick={this.handlePagination}>
-                        <IconContext.Provider
-                            value={{ pointerEvents: "none"}}>
-                        <span className={"icon icon--page-arrows"}>
-                            <IoIosArrowForward />
-                        </span>
-                        </IconContext.Provider>
-                    </button>
+                                        </IconContext.Provider>
+                                        {item.vote}
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {
+                        this.state.loading ?
+                            <div className={"loading-icon"}>
+                                <img src={loadingIcon} alt={""}/>
+                            </div> : null
+                    }
+                    {
+                        !this.state.appendMovies ?
+                            <div className={"pagination-wrapper"}>
+                                <div className={"page-buttons"}>
+                                    <button disabled={this.state.btnBackDisabled} className={"page-buttons__button"}  id={"back-arrow"} onClick={this.handlePagination}>
+                                        <IconContext.Provider
+                                            value={{ pointerEvents: "none"}}>
+                                        <span className={"icon icon--page-arrows"}>
+                                            <IoIosArrowBack />
+                                        </span>
+                                        </IconContext.Provider>
+                                    </button>
+                                    <button className={"page-buttons__button"} id={"first-page"} onClick={this.handlePagination}>First</button>
+                                    {buttons}
+                                    <button className={"page-buttons__button"} id={"last-page"} onClick={this.handlePagination}>Last</button>
+                                    <button disabled={this.state.btnForwDisabled} className={"page-buttons__button"}  id={"forward-arrow"} onClick={this.handlePagination}>
+                                        <IconContext.Provider
+                                            value={{ pointerEvents: "none"}}>
+                                        <span className={"icon icon--page-arrows"}>
+                                            <IoIosArrowForward />
+                                        </span>
+                                        </IconContext.Provider>
+                                    </button>
+                                </div>
+                            </div>
+                            : null
+                    }
                 </div>
             </div>
         );
