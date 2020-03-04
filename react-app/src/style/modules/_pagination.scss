@@ -19,7 +19,6 @@
     box-sizing: border-box;
     font-family: Raleway, sans-serif;
     border: none;
-    cursor: pointer;
     margin: 10px 0;
     border-radius: 2px;
 
@@ -27,9 +26,13 @@
       @include hover-active-color;
     }
 
-    &:hover,
-     &:hover .icon--page-arrows {
+    &:hover:not([disabled]),
+     &:hover:not([disabled]) .icon--page-arrows {
        @include hover-active-color(#c1a5f3);
      }
+
+    &:not([disabled]) {
+      cursor: pointer;
+    }
   }
 }

@@ -62,8 +62,7 @@ class App extends React.Component {
             appendMovies: false,
             showAll: false,
             btnBackDisabled: true,
-            btnForwDisabled: false,
-            activePage: 1
+            btnForwDisabled: false
         };
 
         this.compareByDesc.bind(this);
@@ -117,7 +116,6 @@ class App extends React.Component {
                 movies: tempMovieArr,
                 totalPages: res.data.total_pages,
                 pageNumber: pNum,
-                activePage: pNum,
                 loading: false
             })
 
@@ -138,38 +136,57 @@ class App extends React.Component {
     };
     handlePagination(e) {
         e.preventDefault();
-        let pNum, bBtn, fBtn;
+        let pNum,
+            bBtn,
+            fBtn;
 
         if(e.target.id === "forward-arrow") {
+            if(this.state.pageNumber < 500 && this.state.pageNumber > 498)
+            {
+                fBtn=true;
+                bBtn=false;
+            }
             pNum = this.state.pageNumber+1;
-            bBtn = false;
         } else if(e.target.id === "back-arrow") {
-            if(this.state.pageNumber > 2){
-                pNum = this.state.pageNumber-1;
-                fBtn = false;
-            } else {
-                pNum = this.state.pageNumber-1;
-                bBtn = true;
-            }
+            if(this.state.pageNumber < 3)
+                {
+                    bBtn = true;
+                    fBtn = false;
+                }
+            pNum = this.state.pageNumber-1;
         } else if(e.target.id === "first-page") {
-            pNum = 1;
-        } else if(e.target.id === "last-page") {
-            pNum = this.state.totalPages
-        } else {
-            pNum = parseInt(e.target.innerText);
-
-            if(e.target.innerText == 1) {
+            {
+                pNum = 1;
                 bBtn = true;
-            } else if(e.target.innerText == 500) {
-                fBtn = true;
+                fBtn = false;
             }
+        } else if(e.target.id === "last-page") {
+            {
+                pNum = this.state.totalPages;
+                fBtn=true;
+                bBtn=false;
+            }
+        } else {
+            if(parseInt(e.target.innerText) === 500)
+            {
+                fBtn=true;
+                bBtn=false;
+            } else if(parseInt(e.target.innerText) === 1)
+            {
+                bBtn = true;
+                fBtn = false;
+            }
+            pNum = parseInt(e.target.innerText);
         }
+
+       /* if(this.state.pageNumber < 3) bBtn = true;
+            else bBtn = false;
+        if(this.state.pageNumber < 500) fBtn=true;*/
 
         this.setState({
             pageNumber: pNum,
             btnBackDisabled: bBtn,
-            btnForwDisabled: fBtn,
-            activePage: pNum
+            btnForwDisabled: fBtn
         }, function () {
             this.receiveData();
         });
@@ -252,10 +269,10 @@ class App extends React.Component {
         let pNum;
         for(let i=0; i<5; i++) {
             pNum = this.state.pageNumber+i;
-            if(this.state.pageNumber+i <= 500)
+            if(this.state.pageNumber+i <= 500 && this.state.pageNumber+i > 0)
                 buttons.push(<button
                 key={i}
-                className={this.state.activePage == pNum ?
+                className={this.state.pageNumber == pNum ?
                     "page-buttons__button page-buttons__button--active" :
                     "page-buttons__button"}
                 onClick={this.handlePagination}>{(parseInt(this.state.pageNumber)+i)}
@@ -344,7 +361,7 @@ class App extends React.Component {
                         !this.state.appendMovies ?
                             <div className={"pagination-wrapper"}>
                                 <div className={"page-buttons"}>
-                                    <button className={"page-buttons__button"} disabled={this.state.btnBackDisabled} id={"back-arrow"} onClick={this.handlePagination}>
+                                    <button disabled={this.state.btnBackDisabled} className={"page-buttons__button"}  id={"back-arrow"} onClick={this.handlePagination}>
                                         <IconContext.Provider
                                             value={{ pointerEvents: "none"}}>
                                         <span className={"icon icon--page-arrows"}>
@@ -355,7 +372,7 @@ class App extends React.Component {
                                     <button className={"page-buttons__button"} id={"first-page"} onClick={this.handlePagination}>First</button>
                                     {buttons}
                                     <button className={"page-buttons__button"} id={"last-page"} onClick={this.handlePagination}>Last</button>
-                                    <button className={"page-buttons__button"} disabled={this.state.btnForwDisabled} id={"forward-arrow"} onClick={this.handlePagination}>
+                                    <button disabled={this.state.btnForwDisabled} className={"page-buttons__button"}  id={"forward-arrow"} onClick={this.handlePagination}>
                                         <IconContext.Provider
                                             value={{ pointerEvents: "none"}}>
                                         <span className={"icon icon--page-arrows"}>
@@ -365,7 +382,6 @@ class App extends React.Component {
                                     </button>
                                 </div>
                             </div>
-
                             : null
                     }
                 </div>
