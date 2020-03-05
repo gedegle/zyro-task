@@ -1,4 +1,5 @@
 {
+  "homepage": "http://gedegle.github.io/zyro-task",
   "name": "react-app",
   "version": "0.1.0",
   "private": true,
@@ -15,14 +16,16 @@
     "stylelint": "^13.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "webpack-dev-server": "webpack-dev-server",
-    "dev": "webpack-dev-server --mode=development",
-    "prod": "webpack --mode=production",
-    "lint:styles": "stylelint \"src/style/**/*.scss\" --fix"
+    "start": "node_modules/.bin/react-scripts start",
+    "build": "node_modules/.bin/react-scripts build",
+    "test": "node_modules/.bin/react-scripts test",
+    "eject": "node_modules/.bin/react-scripts eject",
+    "webpack-dev-server": "node_modules/.bin/webpack-dev-server",
+    "dev": "node_modules/.bin/webpack-dev-server --mode=development",
+    "prod": "node_modules/.bin/webpack --mode=production",
+    "lint:styles": "stylelint \"src/style/**/*.scss\" --fix",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,6 +50,7 @@
     "axios": "^0.19.2",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.4.2",
+    "gh-pages": "^2.2.0",
     "html-webpack-plugin": "^3.2.0",
     "lodash.debounce": "^4.0.8",
     "node-sass": "^4.13.1",
