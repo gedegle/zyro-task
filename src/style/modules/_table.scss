@@ -30,9 +30,8 @@
   @include shadow(#bababa, 10px, -40px);
   @include mq-until(md) {
     box-shadow: none;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 220px;
-    word-break: break-word;
   }
 }
 
@@ -70,6 +69,10 @@
           color: $color-table-header-hover;
         }
       }
+      @include mq-until(md) {
+        padding-left: 1px;
+        word-break: break-word;
+      }
     }
   }
 
@@ -96,6 +99,12 @@
 
       &--number {
         font-size: 18px;
+      }
+
+      @include mq-until(md) {
+        font-size: 12px;
+        padding: 1px;
+        word-break: break-word;
       }
     }
   }
