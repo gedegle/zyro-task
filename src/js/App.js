@@ -6,7 +6,7 @@ import { FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
-import loadingIcon from "./../images/loading.svg";
+import loadingIcon from "../images/loading.svg";
 
 const _ = require("underscore");
 
