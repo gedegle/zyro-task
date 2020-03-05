@@ -59,6 +59,10 @@
       cursor: pointer;
       padding-left: 14px;
 
+      &:nth-child(1) {
+        cursor: auto;
+      }
+
       &:hover {
         color: $color-table-header-hover;
 
