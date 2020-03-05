@@ -15,10 +15,14 @@
   }
 
   &--page-arrows {
-    color: grey;
+    color: $color-cell-shadow;
     margin: 0;
     pointer-events: none;
   }
+}
+
+.scroll-arrow {
+  color: $color-white;
 }
 
 .loading-icon {
