@@ -5,12 +5,16 @@
 
 .pagination-wrapper {
   margin: 0 auto;
+  max-width: 430px;
   width: 100%;
 }
 
 .page-buttons {
   margin: auto;
-  max-width: 430px;
+
+  @include mq-until(md) {
+    max-width: 320px;
+  }
 
   &__button {
     border: none;
@@ -33,6 +37,12 @@
     &:hover:not([disabled]),
     &:hover:not([disabled]) .icon--page-arrows {
       @include hover-active-color(#c1a5f3);
+    }
+
+    @include mq-until(md) {
+      font-size: 10px;
+      max-width: 35px;
+      padding: 6px 1px;
     }
   }
 }
