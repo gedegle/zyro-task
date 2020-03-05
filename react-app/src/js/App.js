@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { IconContext } from "react-icons";
 import { FaChevronDown } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
@@ -49,7 +50,55 @@ function SideNav(props) {
             </aside>
         )
 }
+class ScrollUp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isScrollVisible: false
+        };
 
+        this.toggleScrollBtnVisibility = this.toggleScrollBtnVisibility.bind(this);
+    }
+
+
+    toggleScrollBtnVisibility() {
+        if (window.pageYOffset > 400) {
+            this.setState({
+                isScrollVisible: true
+            });
+        } else {
+            this.setState({
+                isScrollVisible: false
+            });
+        }
+    }
+    componentDidMount() {
+        document.addEventListener("scroll", this.toggleScrollBtnVisibility);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('scroll', this.toggleScrollBtnVisibility);
+    }
+    scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+    render() {
+        return (
+            <div>
+            {this.state.isScrollVisible && (<div onClick={() => this.scrollToTop()} className={"scroll-up-arrow"}>
+                    <IconContext.Provider
+                        value={{ pointerEvents: "none"}}>
+                                <span className={"scroll-arrow"}>
+                                    <FaChevronUp />
+                                </span>
+                    </IconContext.Provider>
+            </div>)}
+            </div>
+        )
+    }
+}
 class App extends React.Component {
     constructor() {
         super();
@@ -178,10 +227,6 @@ class App extends React.Component {
             pNum = parseInt(e.target.innerText);
         }
 
-       /* if(this.state.pageNumber < 3) bBtn = true;
-            else bBtn = false;
-        if(this.state.pageNumber < 500) fBtn=true;*/
-
         this.setState({
             pageNumber: pNum,
             btnBackDisabled: bBtn,
@@ -263,6 +308,7 @@ class App extends React.Component {
             prevSelected: this.state.selected
         });
     }
+
     render() {
         const buttons = [];
         let pNum;
@@ -278,6 +324,7 @@ class App extends React.Component {
             </button>)}
         return(
             <div className={"content-wrapper"}>
+                <ScrollUp />
                 <SideNav state={this.state}/>
                 <div className={"table-area-container"}>
                     <div className={"table-wrapper"}>

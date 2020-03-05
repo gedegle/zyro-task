@@ -1,12 +1,13 @@
 @import "/base/colors";
 @import "/base/variables";
 @import "/modules/table";
-@import "mixins/helpers";
+@import "/mixins/helpers";
 @import "/mixins/media-queries";
 @import "/modules/navbar";
 @import "/modules/side-nav";
 @import "/modules/icons";
 @import "/modules/pagination";
+@import "/modules/scroll-arrow";
 
 html,
 body {
